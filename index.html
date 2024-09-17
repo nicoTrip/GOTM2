@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GOTM2</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            margin: 20px auto;
+        }
+        td, th {
+            border: 2px solid black;
+            padding: 10px;
+            text-align: center;
+            width: 40px;
+        }
+        .row-label {
+            font-weight: bold;
+            background-color: #f0f0f0;
+        }
+        input[type="text"] {
+            width: 100%;
+            text-align: center;
+            border: none;
+            font-size: 16px;
+            background-color: transparent;
+        }
+        input[type="text"]:disabled {
+            background-color: #e0e0e0;
+        }
+        .circled {
+            border: 2px solid red;
+            border-radius: 50%;
+        }
+        
+        .circle-button {
+            padding: 5px 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+        .button-enabled {
+            background-color: green;
+            color: white;
+        }
+        .button-disabled {
+            background-color: red;
+            color: white;
+            cursor: not-allowed;
+        }
+        #dice-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        #reset-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+
+        #turn-container {
+            display: flex;
+            justify-content: center; /* Center the text box horizontally */
+            margin: 20px 0; /* Optional: Add some vertical spacing */
+        }
+
+        #turn-display {
+            text-align: center; /* Center the text inside the input field */
+            font-size: 18px; /* Optional: Adjust the font size */
+            border: none; /* Optional: Remove the border */
+            background: transparent; /* Optional: Make the background transparent */
+            outline: none; /* Optional: Remove the outline */
+        }
+
+        #rank-container {
+          text-align: center;
+          margin-top: 20px;
+        }
+
+        /* Spinner styles */
+        /* Center the spinner and stack it on top of everything */
+        .spinner {
+          width: 40px;
+          height: 40px;
+          border: 4px solid rgba(0, 0, 0, 0.1);
+          border-top: 4px solid #3498db;
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+
+          /* Positioning to center it and make it overlap other content */
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          z-index: 9999; /* Ensure it appears on top of other content */
+        }
+
+        /* Optional: Adding a background overlay to dim the screen while loading */
+        #loading-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.5);
+          z-index: 9998;
+          display: none; /* Hidden initially */
+        }
+
+        #score-container {
+            margin-top: 20px; /* Optional: Adds space above the score display */
+            font-size: 18px;  /* Optional: Adjust font size */
+            text-align: center; /* Center the score display */
+        }
+
+
+        
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Sets</h1>
+    <table>
+        <thead>
+            <!-- <tr>
+                <th></th>
+                <th>1</th>
+                <th>2</th>
+                <th>3</th>
+                <th>4</th>
+                <th>5</th>
+                <th>6</th>
+                <th>Circle</th>
+            </tr> -->
+        </thead>
+        <tbody>
+            <tr data-row="1">
+                <td class="row-label">1</td>
+                <td><input type="text" maxlength="1" data-row="1" value="1" disabled></td>
+                <td><input type="text" maxlength="1" data-row="1" disabled></td>
+                <td><input type="text" maxlength="1" data-row="1" disabled></td>
+                <td><input type="text" maxlength="1" data-row="1" disabled></td>
+                <td><input type="text" maxlength="1" data-row="1" disabled></td>
+                <td><input type="text" maxlength="1" data-row="1" disabled></td>
+                <td><input type="text" maxlength="1" data-row="1" disabled></td>
+                <td><input type="text" maxlength="1" data-row="1" disabled></td>
+                <td><input type="text" maxlength="1" data-row="1" disabled></td>
+                <td><input type="text" maxlength="1" data-row="1" disabled></td>
+                <td><input type="text" maxlength="1" data-row="1" disabled></td>
+                <td><input type="text" maxlength="1" data-row="1" disabled></td>
+                <td><input type="text" maxlength="1" data-row="1" disabled></td>
+                <td><input type="text" maxlength="1" data-row="1" disabled></td>
+                <td><input type="text" maxlength="1" data-row="1" disabled></td>
+                <td><input type="text" maxlength="1" data-row="1" disabled></td>
+                <td><input type="text" maxlength="1" data-row="1" disabled></td>
+                <td><button class="circle-button button-disabled" data-row="1">Circle</button></td>
+            </tr>
+            <tr data-row="2">
+                <td class="row-label">2</td>
+                <td><input type="text" maxlength="1" data-row="2" value="2" disabled></td>
+                <td><input type="text" maxlength="1" data-row="2" disabled></td>
+                <td><input type="text" maxlength="1" data-row="2" disabled></td>
+                <td><input type="text" maxlength="1" data-row="2" disabled></td>
+                <td><input type="text" maxlength="1" data-row="2" disabled></td>
+                <td><input type="text" maxlength="1" data-row="2" disabled></td>
+                <td><input type="text" maxlength="1" data-row="2" disabled></td>
+                <td><input type="text" maxlength="1" data-row="2" disabled></td>
+                <td><input type="text" maxlength="1" data-row="2" disabled></td>
+                <td><input type="text" maxlength="1" data-row="2" disabled></td>
+                <td><input type="text" maxlength="1" data-row="2" disabled></td>
+                <td><input type="text" maxlength="1" data-row="2" disabled></td>
+                <td><input type="text" maxlength="1" data-row="2" disabled></td>
+                <td><input type="text" maxlength="1" data-row="2" disabled></td>
+                <td><input type="text" maxlength="1" data-row="2" disabled></td>
+                <td><input type="text" maxlength="1" data-row="2" disabled></td>
+                <td><input type="text" maxlength="1" data-row="2" disabled></td>
+                <td><button class="circle-button button-disabled" data-row="2">Circle</button></td>
+            </tr>
+            <tr data-row="3">
+                <td class="row-label">3</td>
+                <td><input type="text" maxlength="1" data-row="3" value="3" disabled></td>
+                <td><input type="text" maxlength="1" data-row="3" disabled></td>
+                <td><input type="text" maxlength="1" data-row="3" disabled></td>
+                <td><input type="text" maxlength="1" data-row="3" disabled></td>
+                <td><input type="text" maxlength="1" data-row="3" disabled></td>
+                <td><input type="text" maxlength="1" data-row="3" disabled></td>
+                <td><input type="text" maxlength="1" data-row="3" disabled></td>
+                <td><input type="text" maxlength="1" data-row="3" disabled></td>
+                <td><input type="text" maxlength="1" data-row="3" disabled></td>
+                <td><input type="text" maxlength="1" data-row="3" disabled></td>
+                <td><input type="text" maxlength="1" data-row="3" disabled></td>
+                <td><input type="text" maxlength="1" data-row="3" disabled></td>
+                <td><input type="text" maxlength="1" data-row="3" disabled></td>
+                <td><input type="text" maxlength="1" data-row="3" disabled></td>
+                <td><input type="text" maxlength="1" data-row="3" disabled></td>
+                <td><input type="text" maxlength="1" data-row="3" disabled></td>
+                <td><input type="text" maxlength="1" data-row="3" disabled></td>
+                <td><button class="circle-button button-disabled" data-row="3">Circle</button></td>
+            </tr>
+            <tr data-row="4">
+                <td class="row-label">4</td>
+                <td><input type="text" maxlength="1" data-row="4" value="4" disabled></td>
+                <td><input type="text" maxlength="1" data-row="4" disabled></td>
+                <td><input type="text" maxlength="1" data-row="4" disabled></td>
+                <td><input type="text" maxlength="1" data-row="4" disabled></td>
+                <td><input type="text" maxlength="1" data-row="4" disabled></td>
+                <td><input type="text" maxlength="1" data-row="4" disabled></td>
+                <td><input type="text" maxlength="1" data-row="4" disabled></td>
+                <td><input type="text" maxlength="1" data-row="4" disabled></td>
+                <td><input type="text" maxlength="1" data-row="4" disabled></td>
+                <td><input type="text" maxlength="1" data-row="4" disabled></td>
+                <td><input type="text" maxlength="1" data-row="4" disabled></td>
+                <td><input type="text" maxlength="1" data-row="4" disabled></td>
+                <td><input type="text" maxlength="1" data-row="4" disabled></td>
+                <td><input type="text" maxlength="1" data-row="4" disabled></td>
+                <td><input type="text" maxlength="1" data-row="4" disabled></td>
+                <td><input type="text" maxlength="1" data-row="4" disabled></td>
+                <td><input type="text" maxlength="1" data-row="4" disabled></td>
+                <td><button class="circle-button button-disabled" data-row="4">Circle</button></td>
+            </tr>
+            <tr data-row="5">
+                <td class="row-label" data-row="5">5</td>
+                <td><input type="text" maxlength="1" data-row="5" value="5" disabled></td>
+                <td><input type="text" maxlength="1" data-row="5" disabled></td>
+                <td><input type="text" maxlength="1" data-row="5" disabled></td>
+                <td><input type="text" maxlength="1" data-row="5" disabled></td>
+                <td><input type="text" maxlength="1" data-row="5" disabled></td>
+                <td><input type="text" maxlength="1" data-row="5" disabled></td>
+                <td><input type="text" maxlength="1" data-row="5" disabled></td>
+                <td><input type="text" maxlength="1" data-row="5" disabled></td>
+                <td><input type="text" maxlength="1" data-row="5" disabled></td>
+                <td><input type="text" maxlength="1" data-row="5" disabled></td>
+                <td><input type="text" maxlength="1" data-row="5" disabled></td>
+                <td><input type="text" maxlength="1" data-row="5" disabled></td>
+                <td><input type="text" maxlength="1" data-row="5" disabled></td>
+                <td><input type="text" maxlength="1" data-row="5" disabled></td>
+                <td><input type="text" maxlength="1" data-row="5" disabled></td>
+                <td><input type="text" maxlength="1" data-row="5" disabled></td>
+                <td><input type="text" maxlength="1" data-row="5" disabled></td>
+                <td><button class="circle-button button-disabled" data-row="5">Circle</button></td>
+            </tr>
+            <tr data-row="6">
+                <td class="row-label">6</td>
+                <td><input type="text" maxlength="1" data-row="6" value="6" disabled></td>
+                <td><input type="text" maxlength="1" data-row="6" disabled></td>
+                <td><input type="text" maxlength="1" data-row="6" disabled></td>
+                <td><input type="text" maxlength="1" data-row="6" disabled></td>
+                <td><input type="text" maxlength="1" data-row="6" disabled></td>
+                <td><input type="text" maxlength="1" data-row="6" disabled></td>
+                <td><input type="text" maxlength="1" data-row="6" disabled></td>
+                <td><input type="text" maxlength="1" data-row="6" disabled></td>
+                <td><input type="text" maxlength="1" data-row="6" disabled></td>
+                <td><input type="text" maxlength="1" data-row="6" disabled></td>
+                <td><input type="text" maxlength="1" data-row="6" disabled></td>
+                <td><input type="text" maxlength="1" data-row="6" disabled></td>
+                <td><input type="text" maxlength="1" data-row="6" disabled></td>
+                <td><input type="text" maxlength="1" data-row="6" disabled></td>
+                <td><input type="text" maxlength="1" data-row="6" disabled></td>
+                <td><input type="text" maxlength="1" data-row="6" disabled></td>
+                <td><input type="text" maxlength="1" data-row="6" disabled></td>
+                <td><button class="circle-button button-disabled" data-row="6">Circle</button></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button id="dice-button">Roll Dice</button>
+    <p id="dice-results" style="text-align: center; font-size: 18px;"></p>
+
+
+    <div id="turn-container">
+        <input type="text" id="turn-display" value="Current Turn: 1" readonly>
+    </div>
+
+    <div id="loading-overlay"></div>
+    <div id="rank-container">
+    <div id="loading-spinner" class="spinner" style="display: none;"></div>
+    </div>
+
+    <button id="reset-button">Reset Board</button>
+    <p id="dice-results" style="text-align: center; font-size: 18px;"></p>
+
+    <!-- <button id="">Reset Board</button> -->
+    
+    <div id="score-container">
+        Current Score: <span id="score-display">0</span>
+    </div>
+
+
+    <script>
+        const circledCountMap = new Map();
+        const circledThisTurn = new Set();
+        let currentScore = -21;
+
+        
+        
+
+
+
+
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const turnDisplay = document.getElementById("turn-display");
+            const resetButton = document.getElementById("reset-button");
+            const scoreDisplay = document.getElementById("score-display");
+            scoreDisplay.textContent = currentScore;
+            
+
+            async function endGame() {
+                const loadingSpinner = document.getElementById('loading-spinner');
+                const loadingOverlay = document.getElementById('loading-overlay');
+                
+
+                loadingSpinner.style.display = 'inline-block';
+                loadingOverlay.style.display = 'block';
+
+                
+
+                let score = 0;
+                rows.forEach(row => {
+                    const inputs = row.querySelectorAll("input[data-row]");
+                    const labelCell = row.querySelector(".row-label");
+                    let rowNumber = parseInt(inputs[0].dataset.row);
+
+                    const currentRowValues = Array.from(inputs).map(i => i.value);
+                    const count = currentRowValues.filter(val => val === String(rowNumber)).length;
+
+                    if (!circledCountMap.has(rowNumber)) {
+                        circledCountMap.set(rowNumber, 0);
+                    } 
+                    score += (2 * circledCountMap.get(rowNumber) - count) * rowNumber;
+                    console.error(`${rowNumber} ${circledCountMap.get(rowNumber)} ${count}`);
+
+                    
+                })
+                try {
+                    const rank = await saveScore(score);
+
+                    loadingSpinner.style.display = 'none';
+                    loadingOverlay.style.display = 'none';
+                    if (rank == 0) {
+                        alert(`Game Over! Your score is ${score}`);
+                    }
+
+                    alert(`Game Over! Your score is ${score} and your rank is ${rank}!`);
+                } catch(error) {
+                    loadingSpinner.style.display = 'none';
+                    loadingOverlay.style.display = 'none';
+                    alert(`Game Over! Your score is ${score}`);
+                }
+                
+            }
+
+            async function saveScore(score) {
+                try {
+                    const url = "https://script.google.com/macros/s/AKfycbxSUD7T52WhqonMJBsDR_haQfLB69gzYY856BLS1nBOzp2rwaaA2huIC1A7YutjVBXL/exec";
+                    const response = await fetch(url, {
+                        method: "POST",
+                        headers: {
+                        "Content-Type": "text/plain"
+                        },
+                        body: score.toString() 
+                    });
+
+                    // Check if the response is okay
+                    if (!response.ok) {
+                        throw new Error("Network response was not ok");
+                    }
+
+                    // Parse the JSON response
+                    const data = await response.json();
+
+                    return data.rank;
+
+                } catch (error) {
+                    console.error("There was an error submitting the score:", error);
+                }
+                return 0;
+                
+                }
+            
+            function calculateScore() {
+                currentScore = 0;
+   
+                rows.forEach(row => {
+                    const inputs = row.querySelectorAll("input[data-row]");
+                    const labelCell = row.querySelector(".row-label");
+                    let rowNumber = parseInt(inputs[0].dataset.row);
+
+                    const currentRowValues = Array.from(inputs).map(i => i.value);
+                    const count = currentRowValues.filter(val => val === String(rowNumber)).length;
+
+                    if (!circledCountMap.has(rowNumber)) {
+                        circledCountMap.set(rowNumber, 0);
+                    } 
+                    currentScore += (2 * circledCountMap.get(rowNumber) - count) * rowNumber;
+                    console.error(`${rowNumber} ${circledCountMap.get(rowNumber)} ${count}`);
+
+                    
+                })
+                const scoreDisplay = document.getElementById("score-display");
+                scoreDisplay.textContent = currentScore;
+            }
+              
+
+
+            function updateAllButtons(disable) {
+                if (disable) {
+                    rows.forEach(row => {
+                        const circleButton = row.querySelector("button.circle-button");
+                        circleButton.classList.remove("button-enabled");
+                        circleButton.classList.add("button-disabled");
+                        circleButton.disabled = true;
+                        
+                    })
+                    return;
+                }
+                rows.forEach(row => {
+                    const inputs = row.querySelectorAll("input[data-row]");
+                    const circleButton = row.querySelector("button.circle-button");
+                    const labelCell = row.querySelector(".row-label");
+                    let rowNumber = parseInt(inputs[0].dataset.row);
+
+                    const currentRowValues = Array.from(inputs).map(i => i.value);
+                    const count = currentRowValues.filter(val => val === String(rowNumber)).length;
+
+                    if (!circledCountMap.has(rowNumber)) {
+                        circledCountMap.set(rowNumber, 0);
+                    } 
+
+                    // console.error(`In Function`);
+                    if (count - circledCountMap.get(rowNumber) >= rowNumber && !circledThisTurn.has(rowNumber)) {
+                        
+                        circleButton.classList.remove("button-disabled");
+                        circleButton.classList.add("button-enabled");
+                        circleButton.disabled = false;
+                    } else {
+                        // console.error(`${rowNumber} ${count} ${circledCountMap.get(rowNumber)} ${circledThisTurn.has(rowNumber)}`);
+                        circleButton.classList.remove("button-enabled");
+                        circleButton.classList.add("button-disabled");
+                        circleButton.disabled = true;
+                    }
+                    
+                })
+            }
+            const diceButton = document.getElementById("dice-button");
+            const diceResults = document.getElementById("dice-results");
+            let isEndTurn = false;
+            let turnCounter = 0;
+            let circledAmount = 0;
+
+            diceButton.removeEventListener("click", handleDiceButtonClick);
+            diceButton.addEventListener("click", handleDiceButtonClick);
+            function handleDiceButtonClick() {
+                const numberOfTurnsAllowed = 10;
+
+                if (turnCounter >= numberOfTurnsAllowed) {
+                    return;
+                }
+
+                if (!isEndTurn) {
+                    console.error(`${circledAmount}`);
+                    // Roll two dice
+                    const roll1 = Math.floor(Math.random() * 6) + 1;
+                    const roll2 = Math.floor(Math.random() * 6) + 1;
+                    console.error(`Dice rolled: ${roll1} and ${roll2}`);
+
+                    // Display dice results
+                    diceResults.textContent = `Dice rolled: ${roll1} and ${roll2}`;
+
+
+                    // Add dice values to corresponding rows
+                    addToRow(roll1);
+                    addToRow(roll2);
+                    
+//                     calculateScore()
+
+                    // Change button to "End Turn"
+                    diceButton.textContent = "End Turn";
+                    isEndTurn = true;
+                } else {
+                    if (circledAmount > 0) {
+                        alert(`You must put an entry into a row for every circle button pressed.`);
+                        return;
+                    }
+                    // End turn
+                    turnCounter++;
+                    if (turnCounter >= 10) {
+                        turnDisplay.value = `Game Over`;
+                    } else {
+                        turnDisplay.value = `Current Turn: ${turnCounter + 1}`;
+                    }
+                    
+                    diceResults.textContent = `\n`;
+
+                    // Reset button to "Roll Dice"
+                    
+                    isEndTurn = false;
+                    circledThisTurn.clear();
+                    updateAllButtons(true);
+                    if (turnCounter >= numberOfTurnsAllowed) {
+
+                        endGame();
+                        return;
+                    }
+                    diceButton.textContent = "Roll Dice";
+                    return;
+                }
+                updateAllButtons(false);
+            }
+            function addToRow(value) {
+                console.error(`Adding ${value} .`);
+                const row = document.querySelector(`tbody tr[data-row="${value}"]`);
+                if (row) {
+                    const inputs = row.querySelectorAll("input[data-row]");
+
+                    let added = false;
+
+                    // Try to add value to the first empty cell in the row
+                    for (const input of inputs) {
+                        if (input.value === "") {
+                            input.value = value;
+                            input.disabled = true;
+                            added = true;
+                            calculateScore();
+   
+                            
+                            break; // Stop after adding to one cell
+                        }
+                    }
+
+                    // Alert if no empty cells were found (row is full)
+                    if (!added) {
+                        alert(`Row ${value} is full.`);
+                    }
+                } else {
+                    console.error(`Row ${value} not found.`);
+                }
+            }
+
+
+            function disableAllCells() {
+                for (let rowNumber =1; rowNumber <=6; rowNumber++) {
+                    const row = document.querySelector(`tbody tr[data-row="${rowNumber}"]`);
+                    if (row) {
+                        const inputs = row.querySelectorAll("input[data-row]");
+                        let foundEmpty = false;
+
+                        inputs.forEach((input, index) => {
+                            input.disabled = true;
+                            
+                        });
+                    }
+                }
+                
+            }
+
+            resetButton.addEventListener("click", function() {
+            // Clear all input fields except those in the first column
+                document.querySelectorAll('tbody tr').forEach(row => {
+                    const inputs = row.querySelectorAll('input[data-row]');
+                    inputs.forEach((input, index) => {
+                        if (index > 0) { // Skip the first column
+                            input.value = "";
+                            input.disabled = true; // Re-enable all other input fields
+                        }
+                    });
+
+                    inputs.forEach(cell => {
+                        if (cell.classList.contains("circled")) {
+                            cell.classList.remove("circled");
+                        }
+                    });
+
+
+
+                });
+                turnDisplay.value = `Current Turn: 1`;
+                
+                currentScore = -21;
+                
+                const scoreDisplay = document.getElementById("score-display");
+                scoreDisplay.textContent = currentScore;
+                
+//                 calculateScore();
+
+                // Reset any visual state (like circled rows)
+                document.querySelectorAll(".cell-circled").forEach(cell => cell.classList.remove("cell-circled"));
+                document.querySelectorAll(".circle-button").forEach(button => {
+                    button.classList.remove("button-enabled");
+                    button.classList.add("button-disabled");
+                });
+
+
+                // Reset turn state if needed
+                if (isEndTurn) {
+                    diceButton.textContent = "Roll Dice";
+                    isEndTurn = false;
+                }
+
+                turnCounter = 0;
+                circledCountMap.clear()
+                circledThisTurn.clear();
+                turnDisplay.value = `Current Turn: ${turnCounter + 1}`;
+                circledAmount = 0;
+
+                // Reset dice results display
+                diceResults.textContent = "";
+            });
+
+
+
+            const rows = document.querySelectorAll("tbody tr");
+            rows.forEach(row => {
+                const inputs = row.querySelectorAll("input[data-row]");
+                const circleButton = row.querySelector("button.circle-button");
+                const labelCell = row.querySelector(".row-label");
+                let rowNumber = parseInt(inputs[0].dataset.row);
+
+                // Enable the first input of each row
+                // inputs[1].disabled = false;
+
+                inputs.forEach((input, index) => {
+                    input.addEventListener("input", function() {
+                        // Allow only the row number to be entered
+                        if (this.value !== String(rowNumber)) {
+                            this.value = "";
+                            return;
+                        }
+                        calculateScore();
+                        circledAmount--;
+                        if (circledAmount <= 0) {
+                            disableAllCells();
+                            updateAllButtons(false);
+                            console.error("HERE");
+                            return;
+                        }
+
+                        // Disable the current input and enable the next one
+                        this.disabled = true;
+                        if (index + 1 < inputs.length) {
+                            inputs[index + 1].disabled = false;
+                            inputs[index + 1].focus();
+                        }
+
+                        updateAllButtons(false);
+                    });
+                });
+                
+                function updateButtonState() {
+                    const currentRowValues = Array.from(inputs).map(i => i.value);
+                    const count = currentRowValues.filter(val => val === String(rowNumber)).length;
+
+
+                    if (count >= rowNumber && !circledThisTurn) {
+                        circleButton.classList.remove("button-disabled");
+                        circleButton.classList.add("button-enabled");
+                        circleButton.disabled = false;
+                    } else {
+                        circleButton.classList.remove("button-enabled");
+                        circleButton.classList.add("button-disabled");
+                        circleButton.disabled = true;
+                    }
+                }
+
+                // Handle circling when the button is clicked
+                circleButton.addEventListener("click", function() {
+
+                    function enableFirstEmptyCell() {
+                        for (let rowNumber =1; rowNumber <=6; rowNumber++) {
+                            const row = document.querySelector(`tbody tr[data-row="${rowNumber}"]`);
+                            if (row) {
+                                const inputs = row.querySelectorAll("input[data-row]");
+                                let foundEmpty = false;
+
+                                inputs.forEach((input, index) => {
+                                    if (input.value === "" && !foundEmpty) {
+                                        input.disabled = false;
+                                        input.classList.add("editable");
+                                        foundEmpty = true;
+                                    } else {
+                                        input.disabled = true;
+                                        input.classList.remove("editable");
+                                    }
+                                });
+                            }
+                        }
+                        
+                    }
+
+
+                    if (!circleButton.disabled) {
+                        circledAmount++;
+                        enableFirstEmptyCell();
+                        let circleCount = 0;
+//                         currentScore += 2 * rowNumber*rowNumber;
+                        
+//                         const scoreDisplay = document.getElementById("score-display");
+//                         scoreDisplay.textContent = currentScore;
+                        
+                        
+                        
+                        circledThisTurn.add(rowNumber);
+                        
+
+                        // Include the label cell when checking for circling
+                        // if (labelCell.textContent === String(rowNumber) && !labelCell.classList.contains("circled")) {
+                        //     labelCell.classList.add("circled");
+                        //     circleCount++;
+                        // }
+                        let i = 0;
+                        inputs.forEach(cell => {
+                            if (cell.value === String(rowNumber) && !cell.classList.contains("circled") && i < rowNumber) {
+                                i++;
+                                cell.classList.add("circled");
+                                circleCount++;
+                            }
+                        });
+
+                        if (circledCountMap.has(rowNumber)) {
+                            circledCountMap.set(rowNumber, circledCountMap.get(rowNumber) + circleCount);
+                        } else {
+                            circledCountMap.set(rowNumber, circleCount);
+                        }
+                        calculateScore();
+
+                        // Mark the row as circled for this turn to prevent multiple circles in one turn
+
+                        // Disable all inputs in the row after circling
+                        // inputs.forEach(cell => cell.disabled = true);
+
+                        // Disable the button after circling
+                        circleButton.classList.remove("button-enabled");
+                        circleButton.classList.add("button-disabled");
+                        circleButton.disabled = true;
+
+                        // Optional: Additional logic if needed after circling
+                    }
+                });
+                
+            });
+            
+        });
+    </script>
+</body>
+</html>
